@@ -110,9 +110,9 @@ end;
 
 procedure TForm1.FormResize(Sender: TObject);
 begin
-  Edit1.Width := Form1.Width - 15;
-  StringGrid1.Width := Form1.Width - 15;
-  StringGrid1.Height := Form1.Height - 50;
+//  Edit1.Width := Form1.Width - 15;
+//  StringGrid1.Width := Form1.Width - 15;
+//  StringGrid1.Height := Form1.Height - 50;
   StringGrid1.ColWidths[0] := StringGrid1.Width-4;
 end;
 
