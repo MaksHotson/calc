@@ -1,10 +1,10 @@
 object Form1: TForm1
   Left = 1017
-  Height = 275
+  Height = 165
   Top = 146
   Width = 504
   Caption = 'Калькулятор'
-  ClientHeight = 275
+  ClientHeight = 165
   ClientWidth = 504
   OnActivate = FormActivate
   OnResize = FormResize
@@ -29,7 +29,7 @@ object Form1: TForm1
   end
   object StringGrid1: TStringGrid
     Left = 0
-    Height = 245
+    Height = 135
     Top = 30
     Width = 504
     Align = alClient
@@ -48,6 +48,7 @@ object Form1: TForm1
     Font.Quality = fqDraft
     Font.Style = [fsBold]
     GridLineWidth = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goSmoothScroll, goRowHighlight]
     ParentFont = False
     RowCount = 1
     TabOrder = 1
@@ -58,5 +59,6 @@ object Form1: TForm1
     TitleFont.Quality = fqDraft
     TitleFont.Style = [fsBold]
     OnDblClick = StringGrid1DblClick
+    OnKeyPress = StringGrid1KeyPress
   end
 end

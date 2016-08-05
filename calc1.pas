@@ -21,6 +21,7 @@ type
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
     procedure StringGrid1DblClick(Sender: TObject);
+    procedure StringGrid1KeyPress(Sender: TObject; var Key: char);
   private
     { private declarations }
   public
@@ -48,7 +49,6 @@ var
   Int: Integer;
 begin
   if (Key = char(VK_ESCAPE)) then
-//  if (Key = char(27)) then
     Application.Terminate;
   if (Key = char(13)) then begin
     FParser := TFPExpressionParser.Create(nil);
@@ -57,7 +57,6 @@ begin
         Str := Edit1.Text;
         Int := pos('=', Str);
         Delete(Str, 1, Int);
-//        SetLength(Str, Int-1);
         Edit1.Text := Str;
         Edit1.SelStart := Length(Str);
       end else begin
@@ -66,7 +65,6 @@ begin
         parserResult := FParser.Evaluate;   // or: FParser.EvaluateExpression(parserResult);
         resultValue := ArgToFloat(parserResult);
         ShowEq := True;
-  //      Edit1.Caption := Edit1.Caption + '=' + FloatToStr(resultValue);
         if(StringGrid1.Cells[0, 0] <> '') then
           StringGrid1.RowCount := StringGrid1.RowCount + 1;
         for i := StringGrid1.RowCount-1 downto 1 do begin
@@ -78,6 +76,7 @@ begin
     finally
       FParser.Free;
     end;
+    StringGrid1.ColWidths[0] := StringGrid1.ClientWidth;
   end;
 end;
 
@@ -110,15 +109,21 @@ end;
 
 procedure TForm1.FormResize(Sender: TObject);
 begin
-//  Edit1.Width := Form1.Width - 15;
-//  StringGrid1.Width := Form1.Width - 15;
-//  StringGrid1.Height := Form1.Height - 50;
-  StringGrid1.ColWidths[0] := StringGrid1.Width-4;
+  StringGrid1.ColWidths[0] := StringGrid1.ClientWidth;
 end;
 
 procedure TForm1.StringGrid1DblClick(Sender: TObject);
 begin
   Edit1.Text := StringGrid1.Cells[0, StringGrid1.Row];
+  Form1.ActiveControl := Edit1;
+end;
+
+procedure TForm1.StringGrid1KeyPress(Sender: TObject; var Key: char);
+begin
+  if (Key = char(13)) then begin
+    Edit1.Text := StringGrid1.Cells[0, StringGrid1.Row];
+    Form1.ActiveControl := Edit1;
+  end;
 end;
 
 end.
