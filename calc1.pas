@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  fpexprpars, LclIntf, Grids, Windows;
+  fpexprpars, LclIntf, Grids, ExtCtrls, Windows;
 
 type
 
@@ -15,13 +15,16 @@ type
   TForm1 = class(TForm)
     Edit1: TEdit;
     StringGrid1: TStringGrid;
+    TrayIcon1: TTrayIcon;
     procedure Edit1Change(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: char);
     procedure FormActivate(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
+    procedure FormWindowStateChange(Sender: TObject);
     procedure StringGrid1DblClick(Sender: TObject);
     procedure StringGrid1KeyPress(Sender: TObject; var Key: char);
+    procedure TrayIcon1Click(Sender: TObject);
   private
     { private declarations }
   public
@@ -49,7 +52,8 @@ var
   Int: Integer;
 begin
   if (Key = char(VK_ESCAPE)) then
-    Application.Terminate;
+//    Application.Terminate;
+    Application.Minimize;
   if (Key = char(13)) then begin
     FParser := TFPExpressionParser.Create(nil);
     try
@@ -112,6 +116,14 @@ begin
   StringGrid1.ColWidths[0] := StringGrid1.ClientWidth;
 end;
 
+procedure TForm1.FormWindowStateChange(Sender: TObject);
+begin
+  if Form1.WindowState = wsMinimized then
+    Form1.Hide;
+  if Form1.WindowState = wsNormal then
+    Form1.Show;
+end;
+
 procedure TForm1.StringGrid1DblClick(Sender: TObject);
 begin
   Edit1.Text := StringGrid1.Cells[0, StringGrid1.Row];
@@ -124,6 +136,13 @@ begin
     Edit1.Text := StringGrid1.Cells[0, StringGrid1.Row];
     Form1.ActiveControl := Edit1;
   end;
+end;
+
+procedure TForm1.TrayIcon1Click(Sender: TObject);
+begin
+  Form1.Show;
+  Form1.WindowState := wsNormal;
+  Form1.FormStyle := fsStayOnTop;
 end;
 
 end.
