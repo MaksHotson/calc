@@ -8,9 +8,12 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   fpexprpars, LclIntf, Grids, ExtCtrls, Windows;
 
+const
+ WM_GOTOFOREGROUND = WM_USER+1;
+
 type
 
-  { TForm1 }
+ { TForm1 }
 
   TForm1 = class(TForm)
     Edit1: TEdit;
@@ -25,10 +28,14 @@ type
     procedure StringGrid1DblClick(Sender: TObject);
     procedure StringGrid1KeyPress(Sender: TObject; var Key: char);
     procedure TrayIcon1Click(Sender: TObject);
+    procedure WMGotoForeground(var Msg: TMessage); message WM_GOTOFOREGROUND;
   private
     { private declarations }
   public
     { public declarations }
+//    procedure WMGotoForeground(var Msg: TMessage); message WM_GOTOFOREGROUND;
+//    procedure MyWMCopyData(var Msg : TWMCopyData); message WM_COPYDATA;
+//    procedure MyWMCopyData(var Msg : TMessage); message WM_COPYDATA;
   end;
 
 var
@@ -41,6 +48,21 @@ implementation
 { TForm1 }
 var
   ShowEq: Boolean;
+
+procedure TForm1.WMGotoForeground(var Msg: TMessage);
+//procedure TForm1.MyWMCopyData(var Msg : TWMCopyData);
+//procedure TForm1.MyWMCopyData(var Msg : TMessage);
+var
+  s: PAnsiChar;
+begin
+  //сворачиваем приложение, а потом разворачиваем его
+  //при этом окно будет выведено на передний план
+//  Application.Minimize;
+//  Application.Restore;
+  Form1.Show;
+  Form1.WindowState := wsNormal;
+  Form1.FormStyle := fsStayOnTop;
+end;
 
 procedure TForm1.Edit1KeyPress(Sender: TObject; var Key: char);
 var
