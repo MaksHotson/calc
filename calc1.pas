@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  fpexprpars, LclIntf, Grids, Windows;
+  fpexprpars, LclIntf, Grids, ExtCtrls, Windows, simpleipc;
 
 type
 
@@ -15,13 +15,17 @@ type
   TForm1 = class(TForm)
     Edit1: TEdit;
     StringGrid1: TStringGrid;
+    Timer1: TTimer;
     procedure Edit1Change(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: char);
     procedure FormActivate(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
     procedure StringGrid1DblClick(Sender: TObject);
     procedure StringGrid1KeyPress(Sender: TObject; var Key: char);
+    procedure Timer1Timer(Sender: TObject);
   private
     { private declarations }
   public
@@ -38,6 +42,8 @@ implementation
 { TForm1 }
 var
   ShowEq: Boolean;
+  SS: TSimpleIPCServer;
+
 
 procedure TForm1.Edit1KeyPress(Sender: TObject; var Key: char);
 var
@@ -49,7 +55,8 @@ var
   Int: Integer;
 begin
   if (Key = char(VK_ESCAPE)) then
-    Application.Terminate;
+//    Application.Terminate;
+    Application.Minimize;
   if (Key = char(13)) then begin
     FParser := TFPExpressionParser.Create(nil);
     try
@@ -84,6 +91,20 @@ procedure TForm1.FormActivate(Sender: TObject);
 begin
   ShowEq := False;
   StringGrid1.ColWidths[0] := StringGrid1.Width-4;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  SS := TSimpleIPCServer.Create(self);
+  SS.ServerID := 'SServer';
+  SS.Global := True;
+  SS.StartServer;
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  SS.StopServer;
+  SS.Free;
 end;
 
 procedure TForm1.FormKeyPress(Sender: TObject; var Key: char);
@@ -123,6 +144,15 @@ begin
   if (Key = char(13)) then begin
     Edit1.Text := StringGrid1.Cells[0, StringGrid1.Row];
     Form1.ActiveControl := Edit1;
+  end;
+end;
+
+procedure TForm1.Timer1Timer(Sender: TObject);
+begin
+  if(SS.PeekMessage(10, True)) then begin
+    Form1.Show;
+    Form1.WindowState := wsNormal;
+    Form1.FormStyle := fsStayOnTop;
   end;
 end;
 
