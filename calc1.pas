@@ -134,7 +134,7 @@ end;
 
 procedure TForm1.FormResize(Sender: TObject);
 begin
-  StringGrid1.ColWidths[0] := StringGrid1.ClientWidth;
+  StringGrid1.ColWidths[0] := StringGrid1.ClientWidth-4;
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
@@ -176,8 +176,9 @@ end;
 procedure TForm1.FormWindowStateChange(Sender: TObject);
 begin
   if Form1.WindowState = wsMinimized then
-    Form1.Hide;
-  if Form1.WindowState = wsNormal then
+    Form1.Hide
+  else
+//  if Form1.WindowState = wsNormal then
     Form1.Show;
 end;
 
@@ -198,9 +199,10 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   if(SS.PeekMessage(10, True)) then begin
-    Form1.Show;
-    Form1.WindowState := wsNormal;
-    Form1.FormStyle := fsStayOnTop;
+    Application.Restore;
+//    Form1.Show;
+//    Form1.WindowState := wsNormal;
+//    Form1.FormStyle := fsStayOnTop;
   end;
 end;
 
@@ -208,7 +210,7 @@ procedure TForm1.TrayIcon1Click(Sender: TObject);
 begin
   Form1.Show;
   Form1.WindowState := wsNormal;
-  Form1.FormStyle := fsStayOnTop;
+//  Form1.FormStyle := fsStayOnTop;
 end;
 
 end.
