@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  fpexprpars, LclIntf, Grids, ExtCtrls, Windows, simpleipc;
+  fpexprpars, LclIntf, Grids, ExtCtrls, Windows, simpleipc, ShellAPI;
 
 type
 
@@ -23,6 +23,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure StringGrid1DblClick(Sender: TObject);
     procedure StringGrid1KeyPress(Sender: TObject; var Key: char);
     procedure Timer1Timer(Sender: TObject);
@@ -131,6 +132,42 @@ end;
 procedure TForm1.FormResize(Sender: TObject);
 begin
   StringGrid1.ColWidths[0] := StringGrid1.ClientWidth;
+end;
+
+procedure TForm1.FormShow(Sender: TObject);
+  //* Uses ShellAPI
+  function IsTaskbarAutoHideOn: Boolean;
+  var
+    ABData: TAppBarData;
+  begin
+    ABData.cbSize := SizeOf(ABData);
+//     Result := (SHAppBarMessage(ABM_GETSTATE, ABData) and ABS_AUTOHIDE) > 0;
+     Result := False;
+  end;
+
+  function TaskBarHeight: integer;
+  var
+    hTB: HWND; // taskbar handle
+    TBRect: TRect; // taskbar rectangle
+  begin
+    hTB:= FindWindow('Shell_TrayWnd', '');
+    if hTB = 0 then
+      Result := 0
+    else begin
+      GetWindowRect(hTB, TBRect);
+      Result := TBRect.Bottom - TBRect.Top;
+    end;
+  end;
+
+begin
+  //* This code will force the window to the lower right corner of the screen
+  //* taking into account if the user autohides the taskbar or not.
+//  Form1.Left := (Screen.Width - Form1.Width);
+
+  if IsTaskbarAutoHideOn then
+//    Form1.Top := (Screen.Height - Form1.Height)
+  else
+//    Form1.Top := (Screen.Height - Form1.Height) - TaskBarHeight;
 end;
 
 procedure TForm1.StringGrid1DblClick(Sender: TObject);
