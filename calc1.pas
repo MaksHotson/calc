@@ -16,6 +16,7 @@ type
     Edit1: TEdit;
     StringGrid1: TStringGrid;
     Timer1: TTimer;
+    TrayIcon1: TTrayIcon;
     procedure Edit1Change(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: char);
     procedure FormActivate(Sender: TObject);
@@ -60,6 +61,7 @@ begin
   if (Key = char(VK_ESCAPE)) then
 //    Application.Terminate;
     Application.Minimize;
+//    Form1.WindowState := wsNormal;
   if (Key = char(13)) then begin
     FParser := TFPExpressionParser.Create(nil);
     try
@@ -209,6 +211,7 @@ end;
 
 procedure TForm1.TrayIcon1Click(Sender: TObject);
 begin
+  Application.Restore;
   Form1.Show;
   Form1.WindowState := wsNormal;
 //  Form1.FormStyle := fsStayOnTop;
