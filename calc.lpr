@@ -14,21 +14,27 @@ uses
 {$R *.res}
 var
   SC: TSimpleIPCClient;
+//  SS: TSimpleIPCServer;
 
 begin
   SC := TSimpleIPCClient.Create(nil);
   SC.ServerID := 'SServer';
-//  SS.InstanceID := 'SServer';
   if(SC.ServerRunning) then begin
     SC.Connect;
     SC.SendStringMessage('QQ');
     Application.Terminate;
     Exit;
   end else begin
+//    SS := TSimpleIPCServer.Create(self);
+//    SS.ServerID := 'SServer';
+//    SS.Global := True;
+//    SS.StartServer;
     RequireDerivedFormResource:=True;
     Application.Initialize;
     Application.CreateForm(TForm1, Form1);
     Application.Run;
+//    SS.StopServer;
+//    SS.Free;
   end;
 end.
 

@@ -16,7 +16,6 @@ type
     Edit1: TEdit;
     StringGrid1: TStringGrid;
     Timer1: TTimer;
-    TrayIcon1: TTrayIcon;
     procedure Edit1Change(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: char);
     procedure FormActivate(Sender: TObject);
@@ -95,6 +94,7 @@ procedure TForm1.FormActivate(Sender: TObject);
 begin
   ShowEq := False;
   StringGrid1.ColWidths[0] := StringGrid1.Width-4;
+  SS.StartServer;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -175,11 +175,11 @@ end;
 
 procedure TForm1.FormWindowStateChange(Sender: TObject);
 begin
-  if Form1.WindowState = wsMinimized then
-    Form1.Hide
-  else
-//  if Form1.WindowState = wsNormal then
-    Form1.Show;
+//  if Form1.WindowState = wsMinimized then
+//    Form1.Hide
+//  else
+////  if Form1.WindowState = wsNormal then
+//    Form1.Show;
 end;
 
 procedure TForm1.StringGrid1DblClick(Sender: TObject);
@@ -198,11 +198,12 @@ end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
-  if(SS.PeekMessage(10, True)) then begin
+  if(SS.PeekMessage(100, True)) then begin
     Application.Restore;
-//    Form1.Show;
-//    Form1.WindowState := wsNormal;
-//    Form1.FormStyle := fsStayOnTop;
+    Form1.Show;
+    Form1.WindowState := wsNormal;
+    Form1.FormStyle := fsStayOnTop;
+Form1.SetFocus;
   end;
 end;
 
