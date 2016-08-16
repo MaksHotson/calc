@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  fpexprpars, LclIntf, Grids, ExtCtrls, Windows, simpleipc, ShellAPI;
+  fpexprpars, LclIntf, Grids, ExtCtrls, Windows, simpleipc, ShellAPI, XMLConf,
+  Messages, LMessages;
 
 type
 
@@ -17,6 +18,7 @@ type
     StringGrid1: TStringGrid;
     Timer1: TTimer;
     TrayIcon1: TTrayIcon;
+    XMLConfig1: TXMLConfig;
     procedure Edit1Change(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: char);
     procedure FormActivate(Sender: TObject);
@@ -30,7 +32,8 @@ type
     procedure StringGrid1KeyPress(Sender: TObject; var Key: char);
     procedure Timer1Timer(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
-  private
+//    procedure FormMove(var Msg: TMessage); message WM_MOVE;
+    procedure WMMove(var Message: TLMMove); message LM_MOVE;
     { private declarations }
   public
     { public declarations }
@@ -47,6 +50,7 @@ implementation
 var
   ShowEq: Boolean;
   SS: TSimpleIPCServer;
+  ConfigFileName: String;
 
 
 procedure TForm1.Edit1KeyPress(Sender: TObject; var Key: char);
@@ -97,6 +101,24 @@ begin
   ShowEq := False;
   StringGrid1.ColWidths[0] := StringGrid1.Width-4;
   SS.StartServer;
+
+//  Form1.Top := XMLConfig1.GetValue('/form_top', 0);
+//  Form1.Left := XMLConfig1.GetValue('/form_left', 0);
+//  Form1.Width := XMLConfig1.GetValue('/form_width', 0);
+//  Form1.Height := XMLConfig1.GetValue('/form_height', 0);
+end;
+
+//procedure TForm1.FormMove(var msg: TMessage);
+//begin
+procedure TForm1.WMMove(var Message: TLMMove);
+begin
+//  inherited;
+  inherited WMMove(Message);
+  XMLConfig1.SetValue('/form_top', IntToStr(Form1.Top));
+  XMLConfig1.SetValue('/form_left', IntToStr(Form1.Left));
+  XMLConfig1.SetValue('/form_width', IntToStr(Form1.Width));
+  XMLConfig1.SetValue('/form_height', IntToStr(Form1.Height));
+  XMLConfig1.Flush;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -105,6 +127,27 @@ begin
   SS.ServerID := 'SServer';
   SS.Global := True;
   SS.StartServer;
+
+  ConfigFileName := 'calc_config.xml';
+  XMLConfig1.Filename := ConfigFileName;
+
+//  if(FileExists(ConfigFileName)) then begin
+  if(FileExists(XMLConfig1.Filename)) then begin
+    if(XMLConfig1.GetValue('/form_top', -1) > 0) then begin
+      Form1.Top := XMLConfig1.GetValue('/form_top', 0);
+      Form1.Left := XMLConfig1.GetValue('/form_left', 0);
+//      Form1.Top := 50;
+//      Form1.Left := 500;
+      Form1.Width := XMLConfig1.GetValue('/form_width', 0);
+      Form1.Height := XMLConfig1.GetValue('/form_height', 0);
+    end;
+//  end else begin
+//      XMLConfig1.Filename := 'calc_config';
+//      XMLConfig1.SetValue('/form_top', IntToStr(Form1.Top));
+//      XMLConfig1.SetValue('/form_left', IntToStr(Form1.Left));
+//      XMLConfig1.SetValue('/form_width', IntToStr(Form1.Width));
+//      XMLConfig1.SetValue('/form_height', IntToStr(Form1.Height));
+  end;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
@@ -137,6 +180,12 @@ end;
 procedure TForm1.FormResize(Sender: TObject);
 begin
   StringGrid1.ColWidths[0] := StringGrid1.ClientWidth-4;
+//  XMLConfig1.Filename := ConfigFileName;
+  XMLConfig1.SetValue('/form_top', IntToStr(Form1.Top));
+  XMLConfig1.SetValue('/form_left', IntToStr(Form1.Left));
+  XMLConfig1.SetValue('/form_width', IntToStr(Form1.Width));
+  XMLConfig1.SetValue('/form_height', IntToStr(Form1.Height));
+  XMLConfig1.Flush;
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
