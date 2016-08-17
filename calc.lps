@@ -11,7 +11,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="4"/>
         <CursorPos Y="39"/>
-        <UsageCount Value="47"/>
+        <UsageCount Value="50"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -21,9 +21,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="249"/>
-        <CursorPos Y="280"/>
-        <UsageCount Value="47"/>
+        <TopLine Value="54"/>
+        <CursorPos X="3" Y="72"/>
+        <UsageCount Value="50"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>

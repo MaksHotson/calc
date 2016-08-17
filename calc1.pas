@@ -69,7 +69,8 @@ var
 begin
   if (Key = char(VK_ESCAPE)) then
 //    Application.Terminate;
-    Application.Minimize;
+//    Application.Minimize;
+    Form1.Hide;
 //    Form1.WindowState := wsNormal;
   if (Key = char(13)) then begin
     FParser := TFPExpressionParser.Create(nil);
