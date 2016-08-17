@@ -9,6 +9,7 @@ object Form1: TForm1
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnHide = FormHide
   OnResize = FormResize
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
@@ -4094,11 +4095,12 @@ object Form1: TForm1
       01AC410000AC410000AC410000AC410000AC410000AC410000AC410000AC4100
       00AC418001AC41C003AC41E007AC41F00FAC41
     }
+    Visible = True
+    OnClick = TrayIcon1Click
     left = 248
     top = 80
   end
   object XMLConfig1: TXMLConfig
-    Filename = 'calc_config'
     StartEmpty = False
     RootName = 'CONFIG'
     ReadOnly = False
