@@ -277,6 +277,7 @@ begin
     Application.Restore;
     Form1.Show;
     Form1.WindowState := wsNormal;
+    Form1.SetFocus;
 //    Form1.FormStyle := fsStayOnTop;
   end;
 //  strm.Free;
