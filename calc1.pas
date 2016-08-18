@@ -18,7 +18,6 @@ type
     Edit1: TEdit;
     StringGrid1: TStringGrid;
     Timer1: TTimer;
-    TrayIcon1: TTrayIcon;
     XMLConfig1: TXMLConfig;
     procedure Edit1Change(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: char);
