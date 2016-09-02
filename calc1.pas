@@ -68,6 +68,8 @@ begin
       Delete(Str, 1, Int);
       Edit1.Text := Str;
       Edit1.SelStart := Length(Str);
+    end else begin
+      Edit1.SelStart := Length(Edit1.Text);
     end;
   if (Key = ',') then
     Key := '.';
