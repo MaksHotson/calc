@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   fpexprpars, LclIntf, Grids, ExtCtrls, Windows, simpleipc, ShellAPI, XMLConf,
-  LMessages;
+  LMessages, Character;
 
 type
 
@@ -30,6 +30,7 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
     procedure WMMove(var Message: TLMMove); message LM_MOVE;
+    procedure ExprPow(var Result: TFPExpressionResult; Const Args: TExprParameterArray);
     { private declarations }
   public
     { public declarations }
@@ -51,7 +52,6 @@ var
   str: String;
   strm: TStringStream;
 
-
 procedure TForm1.Edit1KeyPress(Sender: TObject; var Key: char);
 var
   FParser: TFPExpressionParser;
@@ -71,13 +71,22 @@ begin
     end else begin
 //      Edit1.SelStart := Length(Edit1.Text);
     end;
-  if (Key = ',') then
-    Key := '.';
+//  if (Key = ',') then
+//    Key := '.';
   if (Key = char(VK_ESCAPE)) then
     Form1.Hide;
   if (Key = char(13)) then begin
     FParser := TFPExpressionParser.Create(nil);
+    FParser.Identifiers.AddFunction('pow', 'F', 'FF', @ExprPow);
     try
+      for i := 1 to Length(Edit1.Text)-1 do begin
+        if((Edit1.Text[i] = ',') and IsNumber(Edit1.Text[i+1])) then begin
+          Str := Edit1.Text;
+//          Edit1.Text[i] := '.';
+          Str[i] := '.';
+          Edit1.Text := Str;
+        end;
+      end;
       if(pos('=', Edit1.Text) > 0) then begin
         Str := Edit1.Text;
         Int := pos('=', Str);
@@ -227,6 +236,17 @@ begin
   Application.Restore;
   Form1.Show;
   Form1.WindowState := wsNormal;
+end;
+
+procedure TForm1.ExprPow(var Result: TFPExpressionResult; Const Args: TExprParameterArray);
+var
+  x: Double;
+  y: Double;
+begin
+  x := ArgToFloat(Args[0]);
+  y := ArgToFloat(Args[1]);
+  Result.resFloat := exp(y*ln(x));
+//  Result.resFloat := pow(y, x);
 end;
 
 end.
