@@ -61,7 +61,7 @@ var
   Str: String;
   Int: Integer;
 begin
-  if (Key = '-') or (Key = '+') or (Key = '/') or (Key = '+') then
+  if (Key = '-') or (Key = '+') or (Key = '/') or (Key = '*') then
     if(pos('=', Edit1.Text) > 0) then begin
       Str := Edit1.Text;
       Int := pos('=', Str);
