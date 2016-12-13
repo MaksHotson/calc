@@ -74,9 +74,9 @@ begin
     end;
 //  if (Key = ',') then
 //    Key := '.';
+  firstkey := False;
   if (Key = char(VK_ESCAPE)) then
     Form1.Hide;
-  firstkey := False;
   if (Key = char(13)) then begin
     FParser := TFPExpressionParser.Create(nil);
     FParser.Identifiers.AddFunction('pow', 'F', 'FF', @ExprPow);
