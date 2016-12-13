@@ -51,6 +51,7 @@ var
   ConfigFileName: String;
   str: String;
   strm: TStringStream;
+  firstkey: Boolean;
 
 procedure TForm1.Edit1KeyPress(Sender: TObject; var Key: char);
 var
@@ -62,7 +63,7 @@ var
   Int: Integer;
 begin
   if (Key = '-') or (Key = '+') or (Key = '/') or (Key = '*') then
-    if(pos('=', Edit1.Text) > 0) then begin
+    if ((pos('=', Edit1.Text) > 0) and firstkey) then begin
       Str := Edit1.Text;
       Int := pos('=', Str);
       Delete(Str, 1, Int);
@@ -75,6 +76,7 @@ begin
 //    Key := '.';
   if (Key = char(VK_ESCAPE)) then
     Form1.Hide;
+  firstkey := False;
   if (Key = char(13)) then begin
     FParser := TFPExpressionParser.Create(nil);
     FParser.Identifiers.AddFunction('pow', 'F', 'FF', @ExprPow);
@@ -90,29 +92,23 @@ begin
       if(pos('=', Edit1.Text) > 0) then begin
         Str := Edit1.Text;
         Int := pos('=', Str);
-        Delete(Str, 1, Int);
+        Delete(Str, Int, Length(Str));
         Edit1.Text := Str;
         Edit1.SelStart := Length(Str);
-      end else begin
-        FParser.Builtins := [bcMath];
-        FParser.Expression := Edit1.Caption;
-        parserResult := FParser.Evaluate;   // or: FParser.EvaluateExpression(parserResult);
-        resultValue := ArgToFloat(parserResult);
-        ShowEq := True;
-        Edit1.Caption := Edit1.Caption + '=' + FloatToStr(resultValue);
-
-        StringGrid1.SetFocus;
-        if(StringGrid1.Cells[0, 0] <> '') then
-          StringGrid1.RowCount := StringGrid1.RowCount + 1;
-        for i := StringGrid1.RowCount-1 downto 1 do begin
-          StringGrid1.Cells[0, i] := StringGrid1.Cells[0, i-1];
-        end;
-        StringGrid1.Cells[0, 0] := Edit1.Caption;
-
-//        Edit1.SetFocus;
-//        Edit1.SelStart := Length(Edit1.Text);
-//        Edit1.SelLength := 0;
       end;
+      FParser.Builtins := [bcMath];
+      FParser.Expression := Edit1.Caption;
+      parserResult := FParser.Evaluate;   // or: FParser.EvaluateExpression(parserResult);
+      resultValue := ArgToFloat(parserResult);
+      ShowEq := True;
+      Edit1.Caption := Edit1.Caption + '=' + FloatToStr(resultValue);
+        StringGrid1.SetFocus;
+      if(StringGrid1.Cells[0, 0] <> '') then
+        StringGrid1.RowCount := StringGrid1.RowCount + 1;
+      for i := StringGrid1.RowCount-1 downto 1 do begin
+        StringGrid1.Cells[0, i] := StringGrid1.Cells[0, i-1];
+      end;
+      StringGrid1.Cells[0, 0] := Edit1.Caption;
     finally
       FParser.Free;
     end;
@@ -120,6 +116,7 @@ begin
     Edit1.SetFocus;
     Edit1.SelStart := Length(Edit1.Text);
     Edit1.SelLength := 0;
+    firstkey := True;
   end;
 end;
 
