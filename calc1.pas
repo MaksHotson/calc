@@ -62,7 +62,7 @@ var
   Str: String;
   Int: Integer;
 begin
-  if (Key = '-') or (Key = '+') or (Key = '/') or (Key = '*') then
+  if (Key = '-') or (Key = '+') or (Key = '/') or (Key = '*') or (Key = char(13)) then
     if ((pos('=', Edit1.Text) > 0) and firstkey) then begin
       Str := Edit1.Text;
       Int := pos('=', Str);
@@ -93,6 +93,7 @@ begin
         Str := Edit1.Text;
         Int := pos('=', Str);
         Delete(Str, Int, Length(Str));
+//        Delete(Str, 1, Int);
         Edit1.Text := Str;
         Edit1.SelStart := Length(Str);
       end;
@@ -171,6 +172,7 @@ procedure TForm1.Edit1Change(Sender: TObject);
 //  Int: Integer;
 //  Cur: Integer;
 begin
+  firstkey := False;
 //  if((pos('=', Edit1.Text) > 0) and not ShowEq) then begin
 //    Cur := Edit1.SelStart;
 //    Str := Edit1.Text;
